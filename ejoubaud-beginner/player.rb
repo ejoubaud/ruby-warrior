@@ -1,46 +1,63 @@
-class Player
-  attr_reader :warrior
-
-  def play_turn(warrior)
+class Turn
+  def initialize(warrior, health)
     @warrior = warrior
-
-    if should_charge?
-      charge!
-    elsif low_health?
-      warrior.rest!
-    else
-      warrior.walk!
-    end
-
-    remember_health
+    @health = health.update(warrior)
   end
 
-  def low_health?
-    warrior.health < 12
+  def go
+    if should_charge?
+      charge!
+    elsif @health.low?
+      @warrior.rest!
+    else
+      @warrior.walk!
+    end
   end
 
   def under_attack?
-    warrior.health < previous_health
+    @health.declining?
   end
 
   def should_charge?
-    warrior.feel.enemy? || under_attack?
+    @warrior.feel.enemy? || under_attack?
   end
 
   def charge!
-    if warrior.feel.enemy?
-      warrior.attack!
+    if @warrior.feel.enemy?
+      @warrior.attack!
     else
-      warrior.walk!
+      @warrior.walk!
     end
-  end
-
-  def remember_health
-    @previous_health = warrior.health
-  end
-
-  def previous_health
-    @previous_health || 0
   end
 end
 
+class Health
+  def initialize(warrior)
+    @current = warrior.health
+    update(warrior)
+  end
+
+  def update(warrior)
+    @previous = @current
+    @current = warrior.health
+    self
+  end
+
+  def low?
+    @current < 12
+  end
+
+  def declining?
+    @current < @previous
+  end
+end
+
+class Player
+  def play_turn(warrior)
+    Turn.new(warrior, health(warrior)).go
+  end
+
+  def health(warrior)
+    @health ||= Health.new(warrior)
+  end
+end
