@@ -4,7 +4,7 @@ class Turn
     @health = health.update(warrior)
   end
 
-  def go
+  def go!
     if @warrior.feel.captive?
       @warrior.rescue!
     elsif should_charge?
