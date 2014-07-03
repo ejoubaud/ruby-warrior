@@ -5,7 +5,9 @@ class Turn
   end
 
   def go
-    if should_charge?
+    if @warrior.feel.captive?
+      @warrior.rescue!
+    elsif should_charge?
       charge!
     elsif @health.low?
       @warrior.rest!
