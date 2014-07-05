@@ -6,7 +6,7 @@ class Health
   end
 
   def low?
-    @current < 13
+    @current < 14
   end
 
   def declining?
