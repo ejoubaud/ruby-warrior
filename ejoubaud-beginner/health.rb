@@ -1,11 +1,6 @@
 class Health
-  def initialize(warrior)
-    @current = warrior.health
-    update(warrior)
-  end
-
   def update(warrior)
-    @previous = @current
+    @previous = @current || warrior.health
     @current = warrior.health
     self
   end

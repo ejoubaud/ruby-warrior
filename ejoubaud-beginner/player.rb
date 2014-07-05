@@ -3,10 +3,10 @@ require 'turn'
 
 class Player
   def play_turn(warrior)
-    Turn.new(warrior, health(warrior)).go!
+    Turn.new(warrior, health).go!
   end
 
-  def health(warrior)
-    @health ||= Health.new(warrior)
+  def health
+    @health ||= Health.new
   end
 end
