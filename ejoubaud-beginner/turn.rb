@@ -19,6 +19,7 @@ class Turn
     if @warrior.feel.captive?
       @warrior.rescue!
     elsif @warrior.feel.enemy?
+      @retreat.report_attack
       @warrior.attack!
     else
       @warrior.walk!
