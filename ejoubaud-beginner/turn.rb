@@ -1,8 +1,10 @@
 class Turn
-  def initialize(warrior, health, retreat)
+  def initialize(warrior, health, retreat, orientation)
     @warrior = warrior
     @health = health.update(warrior)
     @retreat = retreat.update(warrior)
+    @orientation = orientation.update(warrior)
+    @next_step = @orientation.next_step
   end
 
   def go!
@@ -11,24 +13,24 @@ class Turn
     elsif @health.low? && !under_attack?
       @warrior.rest!
     else
-      move_forward!
+      move_next_step!
     end
   end
 
-  def move_forward!
-    if @warrior.feel.captive?
-      @warrior.rescue!
-    elsif @warrior.feel.enemy?
+  def move_next_step!
+    if @warrior.feel(@next_step).captive?
+      @warrior.rescue!(@next_step)
+    elsif @warrior.feel(@next_step).enemy?
       @retreat.report_attack
-      @warrior.attack!
+      @warrior.attack!(@next_step)
     else
-      @warrior.walk!
+      @warrior.walk!(@next_step)
     end
   end
 
 private
 
   def under_attack?
-    @health.declining? || @warrior.feel.enemy?
+    @health.declining? || @warrior.feel(@next_step).enemy?
   end
 end
