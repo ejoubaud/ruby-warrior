@@ -9,7 +9,6 @@ class Retreat
 
   def update(warrior)
     @warrior = warrior
-    @away = @orientation.away
     @safe_retreat_impossible = cornered_and_under_attack? || under_attack_since_cornered?
     if just_killed?
       @started_retreat_since_last_kill = false
@@ -33,10 +32,10 @@ class Retreat
     @retreated_last_turn = true
     @started_retreat_since_last_kill = true
     @ended_retreat_since_last_kill = false
-    if @warrior.feel(@away).captive?
-      @warrior.rescue!(@away)
+    if @warrior.feel(:away).captive?
+      @warrior.rescue!(:away)
     else
-      @warrior.walk!(@away)
+      @warrior.walk!(:away)
     end
   end
 
@@ -51,7 +50,7 @@ class Retreat
 private
 
   def cornered?
-    !(@warrior.feel(@away).empty? || @warrior.feel(@away).captive?)
+    !(@warrior.feel(:away).empty? || @warrior.feel(:away).captive?)
   end
 
   def cornered_and_under_attack?

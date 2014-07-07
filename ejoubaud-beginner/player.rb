@@ -1,11 +1,13 @@
 require 'health'
+require 'orientated_warrior'
 require 'orientation'
 require 'retreat'
 require 'turn'
 
 class Player
   def play_turn(warrior)
-    Turn.new(warrior, health, retreat, orientation).go!
+    orientated_warrior = OrientatedWarrior.new(warrior, orientation)
+    Turn.new(orientated_warrior, health, retreat).go!
   end
 
   def health
